@@ -1,7 +1,12 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react'
-import type { ReactNode } from 'react'
+import type { CSSProperties, ReactNode } from 'react'
+import '@lottiefiles/dotlottie-wc'
+import { setWasmUrl } from '@lottiefiles/dotlottie-wc'
+import streakFireNav from './assets/streak-fire-nav.lottie?url&no-inline'
 import { completionTaskDetails } from './completionTasks'
 import type { CompletionTaskId } from './completionTasks'
+
+setWasmUrl('/dotlottie-player.wasm')
 
 type SiteHeaderProps = {
   headerClassName: string
@@ -20,8 +25,114 @@ function SearchIcon() {
   return <svg className="h-[19px] w-[19px] fill-none stroke-current stroke-[1.6]" viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.7" cy="10.7" r="5.8" /><path d="m15.2 15.2 4.5 4.5" /></svg>
 }
 
+type DotLottieCore = {
+  play: () => void
+  stop: () => void
+  setFrame: (frame: number) => void
+  setSegment: (startFrame: number, endFrame: number) => void
+  addEventListener: (event: 'load' | 'loadError', listener: () => void) => void
+  removeEventListener: (event: 'load' | 'loadError', listener: () => void) => void
+}
+
+type DotLottieElement = HTMLElement & {
+  dotLottie?: DotLottieCore
+}
+
+function useReducedMotion() {
+  const [reducedMotion, setReducedMotion] = useState(() => window.matchMedia('(prefers-reduced-motion: reduce)').matches)
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)')
+    const updatePreference = (event: MediaQueryListEvent) => setReducedMotion(event.matches)
+    mediaQuery.addEventListener('change', updatePreference)
+    return () => mediaQuery.removeEventListener('change', updatePreference)
+  }, [])
+
+  return reducedMotion
+}
+
 function StreakButton({ dark, onClick, streak }: { dark: boolean, onClick: () => void, streak: number }) {
-  return <button className={`inline-flex h-[30px] items-center gap-1 rounded-full border-0 px-2 text-[16px] font-semibold leading-none ${dark ? 'bg-[#292929] text-white hover:bg-[#383838]' : 'bg-[#f3f3f3] text-[#111] hover:bg-[#e8e8e8]'}`} aria-label={`View reading profile and ${streak} day streak`} onClick={onClick}><span className="text-[18px] leading-none" aria-hidden="true">🔥</span><span>{streak}</span></button>
+  const reducedMotion = useReducedMotion()
+  const playerRef = useRef<DotLottieElement>(null)
+  const celebrationTimerRef = useRef<number | undefined>(undefined)
+  const lastCelebratedStreakRef = useRef<number | undefined>(undefined)
+  const previousStreakRef = useRef(streak - 1)
+  const [fireReady, setFireReady] = useState(false)
+  const [playerFailed, setPlayerFailed] = useState(false)
+  const [isCelebrating, setIsCelebrating] = useState(false)
+  const [rollingFrom, setRollingFrom] = useState(streak - 1)
+  const buttonReady = fireReady
+
+  useEffect(() => {
+    if (reducedMotion || playerFailed) return
+    const player = playerRef.current
+    const dotLottie = player?.dotLottie
+    if (!dotLottie) return
+
+    const onLoad = () => {
+      dotLottie.stop()
+      dotLottie.setSegment(0, 25)
+      dotLottie.setFrame(0)
+      setFireReady(true)
+    }
+    const onLoadError = () => setPlayerFailed(true)
+
+    dotLottie.addEventListener('load', onLoad)
+    dotLottie.addEventListener('loadError', onLoadError)
+    return () => {
+      dotLottie.removeEventListener('load', onLoad)
+      dotLottie.removeEventListener('loadError', onLoadError)
+    }
+  }, [playerFailed, reducedMotion])
+
+  useEffect(() => {
+    if (!buttonReady || reducedMotion || lastCelebratedStreakRef.current === streak) return
+    window.clearTimeout(celebrationTimerRef.current)
+    setIsCelebrating(false)
+
+    const animationFrame = window.requestAnimationFrame(() => {
+      lastCelebratedStreakRef.current = streak
+      setRollingFrom(previousStreakRef.current)
+      previousStreakRef.current = streak
+      const player = playerRef.current?.dotLottie
+      if (player && !playerFailed) {
+        player.stop()
+        player.setSegment(0, 25)
+        player.setFrame(0)
+        player.play()
+      }
+      setIsCelebrating(true)
+      celebrationTimerRef.current = window.setTimeout(() => setIsCelebrating(false), 1300)
+    })
+
+    return () => window.cancelAnimationFrame(animationFrame)
+  }, [buttonReady, playerFailed, reducedMotion, streak])
+
+  useEffect(() => () => {
+    window.clearTimeout(celebrationTimerRef.current)
+  }, [])
+
+  const sparkStyle = (x: string, y: string, delay: string): CSSProperties => ({ '--spark-x': x, '--spark-y': y, '--spark-delay': delay } as CSSProperties)
+  const streakText = String(streak)
+  const previousStreakText = String(rollingFrom)
+  const streakPrefix = streakText.slice(0, -1)
+  const previousOnesDigit = previousStreakText.slice(-1)
+  const currentOnesDigit = streakText.slice(-1)
+
+  return <button className={`streak-button ${buttonReady ? 'is-ready' : ''} ${isCelebrating ? 'is-celebrating' : ''} ${dark ? 'bg-[#292929] text-white hover:bg-[#383838]' : 'bg-[#f3f3f3] text-[#111] hover:bg-[#e8e8e8]'}`} aria-hidden={!buttonReady} aria-label={`View reading profile and ${streak} day streak`} disabled={!buttonReady} tabIndex={buttonReady ? 0 : -1} onClick={onClick}>
+    <span className="streak-button-content">
+      <span className="streak-fire-visual" aria-hidden="true">
+        <span className="streak-fire-aura" />
+        <span className="streak-fire-icon">
+          {!reducedMotion && !playerFailed && <dotlottie-wc ref={playerRef} src={streakFireNav} segment={[0, 25]} speed="1" aria-hidden="true" />}
+        </span>
+      </span>
+      {isCelebrating ? <span className="streak-count" aria-hidden="true">{streakPrefix}<span className="streak-count-roller"><span className="streak-count-track"><span>{previousOnesDigit}</span><span>{currentOnesDigit}</span></span></span></span> : <span className="streak-count" aria-hidden="true">{streak}</span>}
+      <span className="streak-spark" style={sparkStyle('-5px', '-14px', '0ms')} aria-hidden="true">✦</span>
+      <span className="streak-spark" style={sparkStyle('6px', '-10px', '65ms')} aria-hidden="true">✦</span>
+      <span className="streak-spark" style={sparkStyle('4px', '9px', '130ms')} aria-hidden="true">✦</span>
+    </span>
+  </button>
 }
 
 type Reward = {
