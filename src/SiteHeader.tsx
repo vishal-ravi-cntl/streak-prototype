@@ -372,7 +372,7 @@ function TitleRoadmapModal({ onClose, totalXp }: { onClose: () => void, totalXp:
     <section className="title-roadmap-modal" role="dialog" aria-modal="true" aria-labelledby="title-roadmap-heading" onMouseDown={(event) => event.stopPropagation()}>
       <button className="absolute right-4 top-4 border-0 bg-transparent p-1 text-[25px] font-light leading-none text-[#222] hover:opacity-60" aria-label="Close title roadmap" onClick={onClose}>×</button>
       <div className="border border-[#ededed] px-9 pb-6 pt-7">
-        <p className="text-center text-[9px] font-extrabold uppercase tracking-[.16em] text-[#d93636]">Your title</p>
+        <p className="text-center text-[9px] font-extrabold uppercase tracking-[.16em] text-[#d93636]">You’re a</p>
         <h2 className="mt-2 text-center font-tny-irvin text-[47px] font-normal uppercase leading-[.9]" id="title-roadmap-heading">{currentTitle}</h2>
         <p className="mt-2 text-center font-tny-caslon text-[18px] text-[#555]">{totalXp} XP earned</p>
         <div className="mt-5 border-t border-[#ededed] pt-4">
@@ -416,7 +416,7 @@ function ReadingProfileModal({ onClose, onGames, onArticle, streak, completedTas
         <div className={`relative z-[2] flex h-full min-h-0 flex-col border border-[#eeeeee] px-9 pb-7 pt-8 ${isFlameIntroActive ? 'popup-streak-content-is-hidden' : ''}`}>
         <button className="absolute right-[15px] top-[13px] border-0 bg-transparent p-0 text-[24px] font-light leading-none text-[#222] hover:opacity-60" aria-label="Close reading profile" onClick={onClose}>×</button>
         <img className="mx-auto block h-[42px] w-[168px] object-contain" src="https://www.newyorker.com/verso/static/thenewyorker-us/assets/logo.svg" alt="The New Yorker" />
-        <p className="mb-1 mt-[22px] text-[9px] font-extrabold uppercase tracking-[.15em] text-[#d93636]">Your Reading Profile</p>
+        <p className="mb-1 mt-[22px] text-[9px] font-extrabold uppercase tracking-[.15em] text-[#d93636]">You’re a</p>
         <div className="grid grid-cols-[1fr_100px] items-end">
           <div><button className="group inline-flex items-end gap-2 border-0 bg-transparent p-0 text-left" aria-haspopup="dialog" aria-label={`View ${readingTitle} title roadmap`} onClick={() => setIsTitleRoadmapOpen(true)}><h2 className="font-tny-irvin text-[40px] font-normal uppercase leading-[.9] group-hover:text-[#d93636]" id="profile-title">{readingTitle}</h2><span className="mb-[2px] flex h-[12px] items-center text-[#d93636] transition-transform group-hover:translate-x-[2px] group-hover:-translate-y-[2px]"><ExternalLinkIcon /></span></button><div className="mt-1 flex items-end gap-2"><span className="font-tny-caslon text-[58px] leading-[.8] text-[#147cc0]">{totalXp}</span><span className="mb-[5px] text-[10px] font-bold tracking-[.12em] text-[#777]">XP</span></div></div>
           <div className="pb-[3px] text-center"><div className="popup-streak-flame-target" ref={flameTargetRef} aria-hidden="true">{showFlameFallback && <StaticFlame className="popup-streak-static-flame" />}</div><div className="mt-[2px] font-tny-caslon text-[27px] leading-none">{streak}</div><div className="mt-[3px] text-[10px] font-semibold tracking-[.14em] text-[#777]">STREAK</div></div>
