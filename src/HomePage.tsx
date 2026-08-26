@@ -36,7 +36,11 @@ function HeadphonesIcon() {
   return <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 13v-1a8 8 0 0 1 16 0v1M4 13v4.1a1.9 1.9 0 0 0 1.9 1.9H7v-6H5.9A1.9 1.9 0 0 0 4 14.9Zm16 0v4.1a1.9 1.9 0 0 1-1.9 1.9H17v-6h1.1a1.9 1.9 0 0 1 1.9 1.9Z" /></svg>
 }
 
-export default function HomePage() {
+type HomePageProps = {
+  onArticleClick: () => void
+}
+
+export default function HomePage({ onArticleClick }: HomePageProps) {
   const navigationRef = useRef<HTMLElement>(null)
   const [navigationJoined, setNavigationJoined] = useState(false)
 
@@ -66,8 +70,10 @@ export default function HomePage() {
 
       <main>
         <section className="focus-story" id="latest">
-          <img src={stories[0].image} alt="Secretary of Health and Human Services Robert F. Kennedy Jr. looks on as President Donald Trump speaks in the Oval Office." />
-          <div className="focus-copy"><h1>{stories[0].title}</h1><p>It’s reasonable to worry that Trump’s Secretary of Health and Human Services has done permanent damage to American science and medicine. Yet, <strong>Dhruv Khullar</strong> writes, it’s also possible to read Kennedy’s efforts—especially the new vaccine recommendations—as flailing attempts to enact an unwelcome vision.</p><button className="listen-button"><HeadphonesIcon />Listen</button></div>
+          <a className="focus-image-link" href="/news/the-lede/is-rfk-jr-winning-or-losing" onClick={(event) => { event.preventDefault(); onArticleClick() }}>
+            <img src={stories[0].image} alt="Secretary of Health and Human Services Robert F. Kennedy Jr. looks on as President Donald Trump speaks in the Oval Office." />
+          </a>
+          <div className="focus-copy"><a className="focus-copy-link" href="/news/the-lede/is-rfk-jr-winning-or-losing" onClick={(event) => { event.preventDefault(); onArticleClick() }}><h1>{stories[0].title}</h1><p>It’s reasonable to worry that Trump’s Secretary of Health and Human Services has done permanent damage to American science and medicine. Yet, <strong>Dhruv Khullar</strong> writes, it’s also possible to read Kennedy’s efforts—especially the new vaccine recommendations—as flailing attempts to enact an unwelcome vision.</p></a><button className="listen-button"><HeadphonesIcon />Listen</button></div>
         </section>
 
         <nav className="primary-nav" aria-label="Primary" ref={navigationRef}>
