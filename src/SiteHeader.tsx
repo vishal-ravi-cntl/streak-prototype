@@ -1,5 +1,6 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import type { ReactNode } from 'react'
+import { completionTaskDetails } from './completionTasks'
 import type { CompletionTaskId } from './completionTasks'
 
 type SiteHeaderProps = {
@@ -45,6 +46,7 @@ const rewards: Reward[] = [
 ]
 
 const sessionCompletedTasks = new Set<CompletionTaskId>()
+const sessionRevealedCompletedTasks = new Set<CompletionTaskId>()
 
 function ExternalLinkIcon() {
   return <svg className="h-[12px] w-[12px] fill-none stroke-current stroke-[1.5]" viewBox="0 0 16 16" aria-hidden="true"><path d="M8.5 2.5h5v5M13.25 2.75 7 9M6.5 4H3v9.5h9.5V10" /></svg>
@@ -80,6 +82,7 @@ function RewardsList({ completedTasks, onGames, onClose }: { completedTasks: Set
 }
 
 function ReadingProfileModal({ onClose, onGames, streak, completedTasks }: { onClose: () => void, onGames?: () => void, streak: number, completedTasks: Set<CompletionTaskId> }) {
+  const totalXp = 550 + [...completedTasks].reduce((total, taskId) => total + completionTaskDetails[taskId].xpAmount, 0)
   return <div className="fixed inset-0 z-[100] grid place-items-center overflow-y-auto bg-black/35 px-6 py-6 backdrop-blur-sm" role="presentation">
     <section className="relative h-[640px] max-h-[calc(100vh-48px)] w-[480px] overflow-hidden border border-[#dedede] bg-white p-2 text-[#111] shadow-[0_10px_26px_rgba(0,0,0,.2)]" role="dialog" aria-modal="true" aria-labelledby="profile-title" onMouseDown={(event) => event.stopPropagation()}>
       <div className="flex h-full min-h-0 flex-col border border-[#eeeeee] px-9 pb-7 pt-8">
@@ -87,7 +90,7 @@ function ReadingProfileModal({ onClose, onGames, streak, completedTasks }: { onC
         <img className="mx-auto block h-[42px] w-[168px] object-contain" src="https://www.newyorker.com/verso/static/thenewyorker-us/assets/logo.svg" alt="The New Yorker" />
         <p className="mb-1 mt-[22px] text-[9px] font-extrabold uppercase tracking-[.15em] text-[#d93636]">Your Reading Profile</p>
         <div className="grid grid-cols-[1fr_100px] items-end">
-          <div><h2 className="font-tny-irvin text-[40px] font-normal uppercase leading-[.9]" id="profile-title">City Sage</h2><div className="mt-1 flex items-end gap-2"><span className="font-tny-caslon text-[58px] leading-[.8] text-[#147cc0]">550</span><span className="mb-[5px] text-[10px] font-bold tracking-[.12em] text-[#777]">XP</span></div></div>
+          <div><h2 className="font-tny-irvin text-[40px] font-normal uppercase leading-[.9]" id="profile-title">City Sage</h2><div className="mt-1 flex items-end gap-2"><span className="font-tny-caslon text-[58px] leading-[.8] text-[#147cc0]">{totalXp}</span><span className="mb-[5px] text-[10px] font-bold tracking-[.12em] text-[#777]">XP</span></div></div>
           <div className="pb-[3px] text-center"><div className="text-[52px] leading-[.8]" aria-hidden="true">🔥</div><div className="mt-[2px] font-tny-caslon text-[27px] leading-none">{streak}</div><div className="mt-[3px] text-[10px] font-semibold tracking-[.14em] text-[#777]">STREAK</div></div>
         </div>
         <div className="mt-[34px] border-y border-[#ededed] py-4"><h3 className="font-tny-irvin text-[20px] font-normal uppercase leading-none">Ways to Earn XP</h3></div>
@@ -101,6 +104,7 @@ export default function SiteHeader({ headerClassName, logoClassName, dark = fals
   const logoAsset = logoInverted ? 'logo-inverted.svg' : 'logo.svg'
   const [profileOpen, setProfileOpen] = useState(false)
   const [completedTasks, setCompletedTasks] = useState(() => new Set(sessionCompletedTasks))
+  const [revealedCompletedTasks, setRevealedCompletedTasks] = useState(() => new Set(sessionRevealedCompletedTasks))
   // The streak is session-only: opening the app starts one day above the displayed baseline.
   const [streak] = useState(() => 31 + 1)
 
@@ -108,6 +112,7 @@ export default function SiteHeader({ headerClassName, logoClassName, dark = fals
     const openProfile = () => setProfileOpen(true)
     const completeTask = (event: Event) => {
       const taskId = (event as CustomEvent<CompletionTaskId>).detail
+      if (sessionCompletedTasks.has(taskId)) return
       sessionCompletedTasks.add(taskId)
       setCompletedTasks(new Set(sessionCompletedTasks))
     }
@@ -122,6 +127,17 @@ export default function SiteHeader({ headerClassName, logoClassName, dark = fals
   useEffect(() => {
     if (profileOpen) window.dispatchEvent(new Event('reading-profile-opened'))
   }, [profileOpen])
+
+  useEffect(() => {
+    if (!profileOpen) return
+    const unrevealedTasks = [...completedTasks].filter((taskId) => !sessionRevealedCompletedTasks.has(taskId))
+    if (!unrevealedTasks.length) return
+    const revealTimer = window.setTimeout(() => {
+      unrevealedTasks.forEach((taskId) => sessionRevealedCompletedTasks.add(taskId))
+      setRevealedCompletedTasks(new Set(sessionRevealedCompletedTasks))
+    }, 240)
+    return () => window.clearTimeout(revealTimer)
+  }, [profileOpen, completedTasks])
 
   useEffect(() => {
     if (!profileOpen) return
@@ -150,7 +166,7 @@ export default function SiteHeader({ headerClassName, logoClassName, dark = fals
           <button className="h-[30px] w-[30px] border-0 bg-transparent p-[5px] text-inherit" aria-label="Search"><SearchIcon /></button>
         </div>
       </div>
-      {profileOpen && <ReadingProfileModal onClose={() => setProfileOpen(false)} onGames={onGames} streak={streak} completedTasks={completedTasks} />}
+      {profileOpen && <ReadingProfileModal onClose={() => setProfileOpen(false)} onGames={onGames} streak={streak} completedTasks={revealedCompletedTasks} />}
     </header>
   )
 }

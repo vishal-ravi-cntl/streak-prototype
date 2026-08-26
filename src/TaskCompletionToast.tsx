@@ -7,11 +7,16 @@ const articlePath = '/news/the-lede/is-rfk-jr-winning-or-losing'
 export default function TaskCompletionToast() {
   const [taskId, setTaskId] = useState<CompletionTaskId | null>(null)
   const dismissTimer = useRef<number | undefined>(undefined)
+  const completionTimer = useRef<number | undefined>(undefined)
+
+  const completeTask = (taskToComplete: CompletionTaskId) => window.dispatchEvent(new CustomEvent<CompletionTaskId>('complete-reading-task', { detail: taskToComplete }))
 
   const showTask = (nextTaskId: CompletionTaskId) => {
     setTaskId(nextTaskId)
     window.clearTimeout(dismissTimer.current)
+    window.clearTimeout(completionTimer.current)
     dismissTimer.current = window.setTimeout(() => setTaskId(null), 4500)
+    completionTimer.current = window.setTimeout(() => completeTask(nextTaskId), 700)
   }
 
   useEffect(() => {
@@ -21,6 +26,7 @@ export default function TaskCompletionToast() {
     return () => {
       window.removeEventListener('show-task-completion-toast', showRequestedTask)
       window.clearTimeout(dismissTimer.current)
+      window.clearTimeout(completionTimer.current)
     }
   }, [])
 
@@ -35,8 +41,9 @@ export default function TaskCompletionToast() {
 
   const openReadingProfile = () => {
     setTaskId(null)
+    window.clearTimeout(completionTimer.current)
     window.dispatchEvent(new Event('open-reading-profile'))
-    window.setTimeout(() => window.dispatchEvent(new CustomEvent<CompletionTaskId>('complete-reading-task', { detail: taskId })), 220)
+    window.setTimeout(() => completeTask(taskId), 220)
   }
 
   return <div className="pointer-events-none fixed inset-x-0 bottom-8 z-[110] flex justify-center" role="status" aria-live="polite">
