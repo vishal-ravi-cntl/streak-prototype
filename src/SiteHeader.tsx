@@ -37,8 +37,8 @@ type Reward = {
 const rewards: Reward[] = [
   { title: 'Daily check-in', description: 'Check in today', xp: '+1 XP', status: 'Available', icon: '○', taskId: 'daily-check-in' },
   { title: 'Read today’s main article', description: 'Read today’s featured story', xp: '+2 XP', status: 'Available', icon: '○', articleLink: true, taskId: 'main-article-read' },
-  { title: 'Start a game', description: 'Start a New Yorker game', xp: '+25 XP', status: 'Available', icon: '○', gameLink: true },
-  { title: 'Complete a game', description: 'Finish a New Yorker game', xp: '+1 XP', status: 'Available', icon: '○' },
+  { title: 'Start a game', description: 'Start a New Yorker game', xp: '+1 XP', status: 'Available', icon: '○', gameLink: true, taskId: 'start-game' },
+  { title: 'Complete a game', description: 'Finish a New Yorker game', xp: '+25 XP', status: 'Available', icon: '○', taskId: 'complete-game' },
   { title: 'Reach a 30-day streak', description: 'Build a 30-day reading streak', xp: '+250 XP', status: 'Done', icon: '✓' },
   { title: 'Reach a 14-day streak', description: 'Build a 14-day reading streak', xp: '+150 XP', status: 'Done', icon: '✓' },
   { title: 'Reach a 7-day streak', description: 'Build a 7-day reading streak', xp: '+100 XP', status: 'Done', icon: '✓' },

@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import type { DragEvent } from 'react'
 import SiteHeader from './SiteHeader'
 
@@ -37,6 +37,13 @@ export default function CataloguesPage({ onHome, onGames }: CataloguesPageProps)
   const [showClue, setShowClue] = useState(false)
   const [submissionState, setSubmissionState] = useState<'idle' | 'incorrect' | 'success'>('idle')
 
+  useEffect(() => {
+    const completionTimer = window.setTimeout(() => {
+      window.dispatchEvent(new CustomEvent('show-task-completion-toast', { detail: 'start-game' }))
+    }, 220)
+    return () => window.clearTimeout(completionTimer)
+  }, [])
+
   const moveItem = (targetItem: string) => {
     if (!draggedItem || draggedItem === targetItem) return
     const fromIndex = items.indexOf(draggedItem)
@@ -56,7 +63,9 @@ export default function CataloguesPage({ onHome, onGames }: CataloguesPageProps)
   }
 
   const submitOrder = () => {
-    setSubmissionState(items.every((item, index) => item === correctItems[index]) ? 'success' : 'incorrect')
+    const isCorrect = items.every((item, index) => item === correctItems[index])
+    setSubmissionState(isCorrect ? 'success' : 'incorrect')
+    if (isCorrect) window.setTimeout(() => window.dispatchEvent(new CustomEvent('show-task-completion-toast', { detail: 'complete-game' })), 220)
   }
 
   return (
