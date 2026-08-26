@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import ArticlePage from './ArticlePage'
 import GamesPage from './GamesPage'
 import CataloguesPage from './CataloguesPage'
+import DailyCheckInToast from './DailyCheckInToast'
 import HomePage from './HomePage'
 
 const articlePath = '/news/the-lede/is-rfk-jr-winning-or-losing'
@@ -23,19 +24,18 @@ function App() {
     window.scrollTo({ top: 0, behavior: 'auto' })
   }
 
-  if (path === articlePath) {
-    return <ArticlePage onHome={() => navigate('/')} onGames={() => navigate(gamesPath)} />
-  }
+  const page = path === articlePath
+    ? <ArticlePage onHome={() => navigate('/')} onGames={() => navigate(gamesPath)} />
+    : path === gamesPath
+      ? <GamesPage onHome={() => navigate('/')} onGames={() => navigate(gamesPath)} onCatalogues={() => navigate(cataloguesPath)} />
+      : path === cataloguesPath
+        ? <CataloguesPage onHome={() => navigate('/')} onGames={() => navigate(gamesPath)} />
+        : <HomePage onArticleClick={() => navigate(articlePath)} onGamesClick={() => navigate(gamesPath)} />
 
-  if (path === gamesPath) {
-    return <GamesPage onHome={() => navigate('/')} onGames={() => navigate(gamesPath)} onCatalogues={() => navigate(cataloguesPath)} />
-  }
-
-  if (path === cataloguesPath) {
-    return <CataloguesPage onHome={() => navigate('/')} onGames={() => navigate(gamesPath)} />
-  }
-
-  return <HomePage onArticleClick={() => navigate(articlePath)} onGamesClick={() => navigate(gamesPath)} />
+  return <>
+    {page}
+    <DailyCheckInToast />
+  </>
 }
 
 export default App
