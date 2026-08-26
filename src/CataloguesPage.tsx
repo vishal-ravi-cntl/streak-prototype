@@ -61,7 +61,7 @@ export default function CataloguesPage({ onHome, onGames }: CataloguesPageProps)
 
   return (
     <div className="min-h-screen min-w-[1180px] bg-[#effdf5] text-[#111] font-dm">
-      <SiteHeader headerClassName="sticky top-0 z-30 border-b border-[#dedede] bg-white" horizontalPaddingClassName="px-[50px]" logoClassName="block h-[38px] w-[136px] object-contain" leftContent={<span className="text-[13px] font-semibold">Give the gift of <em className="font-tny-caslon font-normal">The New Yorker.</em></span>} onHome={onHome} />
+      <SiteHeader headerClassName="sticky top-0 z-30 border-b border-[#dedede] bg-white" horizontalPaddingClassName="px-[50px]" logoClassName="block h-[38px] w-[136px] object-contain" leftContent={<span className="text-[13px] font-semibold">Give the gift of <em className="font-tny-caslon font-normal">The New Yorker.</em></span>} onHome={onHome} onGames={onGames} />
       <nav className="sticky top-[69px] z-[29] flex h-[53px] items-center justify-center gap-[21px] border-b border-[#dedede] bg-white text-[12px] font-semibold tracking-[-.02em]" aria-label="Primary">
         {navigationItems.map((item) => item === 'Puzzles & Games' ? <a className="h-[53px] border-b-2 border-[#111] pt-[18px]" href="/crossword-puzzles-and-games" onClick={(event) => { event.preventDefault(); onGames() }} key={item}>{item}</a> : <a href={'#' + item.toLowerCase().replaceAll(' ', '-')} key={item}>{item}</a>)}
       </nav>

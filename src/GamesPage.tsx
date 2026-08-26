@@ -98,7 +98,7 @@ export default function GamesPage({ onHome, onGames, onCatalogues }: GamesPagePr
 
   return (
     <div className="min-h-screen min-w-[1180px] bg-white text-[#111] font-dm">
-      <SiteHeader headerClassName="sticky top-0 z-30 border-b border-[#dedede] bg-white shadow-[0_2px_4px_rgba(0,0,0,.1)]" logoClassName="block h-[44px] w-[164px] object-contain" onHome={onHome} />
+      <SiteHeader headerClassName="sticky top-0 z-30 border-b border-[#dedede] bg-white shadow-[0_2px_4px_rgba(0,0,0,.1)]" logoClassName="block h-[44px] w-[164px] object-contain" onHome={onHome} onGames={onGames} />
       {showNavigation && <nav className="fixed left-0 right-0 top-[69px] z-[29] flex h-[53px] items-center justify-center gap-[21px] border-b border-[#dedede] bg-white text-[12px] font-semibold tracking-[-.02em] shadow-[0_2px_4px_rgba(0,0,0,.07)]" aria-label="Primary">{navigationItems.map((item) => item === 'Puzzles & Games' ? <a className="h-[53px] border-b-2 border-[#111] pt-[18px]" href="/crossword-puzzles-and-games" onClick={(event) => { event.preventDefault(); onGames() }} key={item}>{item}</a> : <a href={'#' + item.toLowerCase().replaceAll(' ', '-')} key={item}>{item}</a>)}</nav>}
 
       <main className="pb-24">

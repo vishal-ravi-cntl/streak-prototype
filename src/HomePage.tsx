@@ -58,7 +58,7 @@ export default function HomePage({ onArticleClick, onGamesClick }: HomePageProps
 
   return (
     <div className="min-w-[1180px] bg-white text-[#111] font-dm">
-      <SiteHeader headerClassName={`sticky top-0 z-20 border-b transition-[color,background-color,border-color] duration-150 ${navigationJoined ? 'border-[#ddd] bg-white text-[#111]' : 'border-[#313131] bg-black text-white'}`} homeHref="#top" logoClassName={`block object-contain transition-[width,height] duration-150 ${navigationJoined ? 'h-[38px] w-[136px]' : 'h-[50px] w-[184px]'}`} dark={!navigationJoined} logoInverted={!navigationJoined} />
+      <SiteHeader headerClassName={`sticky top-0 z-20 border-b transition-[color,background-color,border-color] duration-150 ${navigationJoined ? 'border-[#ddd] bg-white text-[#111]' : 'border-[#313131] bg-black text-white'}`} homeHref="#top" logoClassName={`block object-contain transition-[width,height] duration-150 ${navigationJoined ? 'h-[38px] w-[136px]' : 'h-[50px] w-[184px]'}`} dark={!navigationJoined} logoInverted={!navigationJoined} onGames={onGamesClick} />
 
       <main>
         <section className="grid min-h-[812px] grid-cols-[1.025fr_1fr] items-center bg-black px-[26px] pb-[109px] pt-[94px] text-white" id="latest">
