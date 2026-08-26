@@ -1,8 +1,10 @@
 import { useEffect, useState } from 'react'
 import ArticlePage from './ArticlePage'
+import GamesPage from './GamesPage'
 import HomePage from './HomePage'
 
 const articlePath = '/news/the-lede/is-rfk-jr-winning-or-losing'
+const gamesPath = '/crossword-puzzles-and-games'
 
 function App() {
   const [path, setPath] = useState(() => window.location.pathname)
@@ -20,10 +22,14 @@ function App() {
   }
 
   if (path === articlePath) {
-    return <ArticlePage onHome={() => navigate('/')} />
+    return <ArticlePage onHome={() => navigate('/')} onGames={() => navigate(gamesPath)} />
   }
 
-  return <HomePage onArticleClick={() => navigate(articlePath)} />
+  if (path === gamesPath) {
+    return <GamesPage onHome={() => navigate('/')} onGames={() => navigate(gamesPath)} />
+  }
+
+  return <HomePage onArticleClick={() => navigate(articlePath)} onGamesClick={() => navigate(gamesPath)} />
 }
 
 export default App

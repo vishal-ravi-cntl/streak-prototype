@@ -9,6 +9,7 @@ type Story = {
 
 type HomePageProps = {
   onArticleClick: () => void
+  onGamesClick: () => void
 }
 
 const primaryNavItems = ['The Latest', 'News', 'Books & Culture', 'Fiction & Poetry', 'Humor & Cartoons', 'Magazine', 'Puzzles & Games', 'Video', 'Podcasts', 'Goings On', 'Shop', 'Festival']
@@ -42,7 +43,7 @@ function HeadphonesIcon() {
   return <svg className="h-[25px] w-[25px] fill-none stroke-current stroke-[1]" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 13v-1a8 8 0 0 1 16 0v1M4 13v4.1a1.9 1.9 0 0 0 1.9 1.9H7v-6H5.9A1.9 1.9 0 0 0 4 14.9Zm16 0v4.1a1.9 1.9 0 0 1-1.9 1.9H17v-6h1.1a1.9 1.9 0 0 1 1.9 1.9Z" /></svg>
 }
 
-export default function HomePage({ onArticleClick }: HomePageProps) {
+export default function HomePage({ onArticleClick, onGamesClick }: HomePageProps) {
   const navigationRef = useRef<HTMLElement>(null)
   const [navigationJoined, setNavigationJoined] = useState(false)
 
@@ -84,7 +85,7 @@ export default function HomePage({ onArticleClick }: HomePageProps) {
         </section>
 
         <nav className="sticky top-[69px] z-[19] flex h-[53px] items-center justify-center gap-[21px] border-b border-[#ddd] bg-white text-[12px] font-semibold tracking-[-.02em]" aria-label="Primary" ref={navigationRef}>
-          {primaryNavItems.map((item) => <a href={'#' + item.toLowerCase().replaceAll(' ', '-')} key={item}>{item}</a>)}
+          {primaryNavItems.map((item) => item === 'Puzzles & Games' ? <a href="/crossword-puzzles-and-games" onClick={(event) => { event.preventDefault(); onGamesClick() }} key={item}>{item}</a> : <a href={'#' + item.toLowerCase().replaceAll(' ', '-')} key={item}>{item}</a>)}
         </nav>
 
         <div className="mx-[32px] flex h-[60px] items-center justify-center gap-3 border-y border-[#111] px-[18px] text-[12px]"><img className="h-[35px] w-[35px] object-contain" src="https://media.newyorker.com/photos/6a1edb34b64cb2502bcb50a8/original/pass/ezgif.com-resize%20(1).gif" alt="" /><span className="font-tny-caslon"><strong>Introducing Catalogues:</strong> a brand-new game that challenges you to sort items based on a hidden theme.</span><a className="font-semibold text-[#8d0000]" href="#play">Play now »</a></div>
