@@ -7,6 +7,10 @@ declare module 'react' {
         src?: string
         segment?: string | [number, number]
         speed?: number | string
+        renderConfig?: {
+          autoResize?: boolean
+          devicePixelRatio?: number
+        }
       }
     }
   }
