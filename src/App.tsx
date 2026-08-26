@@ -2,8 +2,8 @@ import { useEffect, useState } from 'react'
 import ArticlePage from './ArticlePage'
 import GamesPage from './GamesPage'
 import CataloguesPage from './CataloguesPage'
-import DailyCheckInToast from './DailyCheckInToast'
 import HomePage from './HomePage'
+import TaskCompletionToast from './TaskCompletionToast'
 
 const articlePath = '/news/the-lede/is-rfk-jr-winning-or-losing'
 const gamesPath = '/crossword-puzzles-and-games'
@@ -34,7 +34,7 @@ function App() {
 
   return <>
     {page}
-    <DailyCheckInToast />
+    <TaskCompletionToast />
   </>
 }
 

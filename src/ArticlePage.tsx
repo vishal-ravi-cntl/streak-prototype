@@ -22,6 +22,13 @@ export default function ArticlePage({ onHome, onGames }: ArticlePageProps) {
     return () => window.removeEventListener('scroll', updateHeader)
   }, [])
 
+  useEffect(() => {
+    const completionTimer = window.setTimeout(() => {
+      window.dispatchEvent(new CustomEvent('show-task-completion-toast', { detail: 'main-article-read' }))
+    }, 220)
+    return () => window.clearTimeout(completionTimer)
+  }, [])
+
   return (
     <div className="min-h-screen min-w-[1180px] bg-white text-[#111]">
       <SiteHeader headerClassName={`sticky top-0 z-30 border-b transition-[color,background-color,border-color,box-shadow] duration-150 ${showLightHeader ? 'border-[#dedede] bg-white text-[#111] shadow-[0_2px_4px_rgba(0,0,0,.14)]' : 'border-[#313131] bg-black text-white'}`} logoClassName={`block object-contain transition-[width,height] duration-150 ${showLightHeader ? 'h-[34px] w-[124px]' : 'h-[44px] w-[164px]'}`} dark={!showLightHeader} logoInverted={!showLightHeader} leftContent={<span className="text-[13px] font-semibold">Give the gift of <em className="font-tny-caslon font-normal">The New Yorker.</em></span>} onHome={onHome} onGames={onGames} />
