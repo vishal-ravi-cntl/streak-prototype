@@ -11,6 +11,7 @@ type SiteHeaderProps = {
   leftContent?: ReactNode
   onHome?: () => void
   onGames?: () => void
+  onArticle?: () => void
   homeHref?: string
   horizontalPaddingClassName?: string
 }
@@ -52,7 +53,7 @@ function ExternalLinkIcon() {
   return <svg className="h-[12px] w-[12px] fill-none stroke-current stroke-[1.5]" viewBox="0 0 16 16" aria-hidden="true"><path d="M8.5 2.5h5v5M13.25 2.75 7 9M6.5 4H3v9.5h9.5V10" /></svg>
 }
 
-function RewardsList({ completedTasks, onGames, onClose }: { completedTasks: Set<CompletionTaskId>, onGames?: () => void, onClose: () => void }) {
+function RewardsList({ completedTasks, onGames, onArticle, onClose }: { completedTasks: Set<CompletionTaskId>, onGames?: () => void, onArticle?: () => void, onClose: () => void }) {
   const previousPositions = useRef(new Map<string, number>())
   const itemRefs = useRef(new Map<string, HTMLDivElement>())
   const activeRewards = rewards.slice(0, 4).filter((reward) => !reward.taskId || !completedTasks.has(reward.taskId))
@@ -76,12 +77,12 @@ function RewardsList({ completedTasks, onGames, onClose }: { completedTasks: Set
   }, [displayRewards])
 
   return <div className="hide-scrollbar min-h-0 flex-1 overflow-y-auto">{displayRewards.map((reward, index) => <div className={`grid grid-cols-[1fr_auto] items-center py-[14px] ${index < displayRewards.length - 1 ? 'border-b border-[#ededed]' : ''}`} key={reward.title} ref={(item) => { if (item) itemRefs.current.set(reward.title, item); else itemRefs.current.delete(reward.title) }}>
-    <div>{(reward.gameLink || reward.articleLink) && reward.status !== 'Done' ? <a className="inline-flex items-center gap-1 !text-[14px] !font-normal leading-none text-[#111] hover:opacity-70" href={reward.gameLink ? '/crossword-puzzles-and-games' : '/news/the-lede/is-rfk-jr-winning-or-losing'} onClick={reward.gameLink && onGames ? (event) => { event.preventDefault(); onGames(); onClose() } : undefined}>{reward.title}<span className="text-[#d93636]"><ExternalLinkIcon /></span></a> : <span className={`inline-flex items-center gap-1 text-[14px] font-normal leading-none ${reward.status === 'Done' ? 'text-[#9a9a9a]' : 'text-[#111]'}`}>{reward.title}</span>}<p className={`mt-[6px] text-[11px] leading-none ${reward.status === 'Done' ? 'text-[#b0b0b0]' : 'text-[#8a8a8a]'}`}>{reward.description}</p></div>
+    <div>{(reward.gameLink || reward.articleLink) && reward.status !== 'Done' ? <a className="inline-flex items-center gap-1 !text-[14px] !font-normal leading-none text-[#111] hover:opacity-70" href={reward.gameLink ? '/crossword-puzzles-and-games' : '/news/the-lede/is-rfk-jr-winning-or-losing'} onClick={reward.gameLink && onGames ? (event) => { event.preventDefault(); onGames(); onClose() } : reward.articleLink && onArticle ? (event) => { event.preventDefault(); onArticle(); onClose() } : undefined}>{reward.title}<span className="text-[#d93636]"><ExternalLinkIcon /></span></a> : <span className={`inline-flex items-center gap-1 text-[14px] font-normal leading-none ${reward.status === 'Done' ? 'text-[#9a9a9a]' : 'text-[#111]'}`}>{reward.title}</span>}<p className={`mt-[6px] text-[11px] leading-none ${reward.status === 'Done' ? 'text-[#b0b0b0]' : 'text-[#8a8a8a]'}`}>{reward.description}</p></div>
     <div className="text-right"><div className={`text-[11px] font-extrabold leading-none ${reward.status === 'Done' ? 'text-[#9a9a9a]' : 'text-[#147cc0]'}`}>{reward.xp}</div><div className={`mt-1 text-[11px] leading-none ${reward.status === 'Done' ? 'font-semibold text-[#9a9a9a]' : 'font-normal text-[#777]'}`}><span className="mr-1">{reward.icon}</span>{reward.status}</div></div>
   </div>)}</div>
 }
 
-function ReadingProfileModal({ onClose, onGames, streak, completedTasks }: { onClose: () => void, onGames?: () => void, streak: number, completedTasks: Set<CompletionTaskId> }) {
+function ReadingProfileModal({ onClose, onGames, onArticle, streak, completedTasks }: { onClose: () => void, onGames?: () => void, onArticle?: () => void, streak: number, completedTasks: Set<CompletionTaskId> }) {
   const totalXp = 550 + [...completedTasks].reduce((total, taskId) => total + completionTaskDetails[taskId].xpAmount, 0)
   return <div className="fixed inset-0 z-[100] grid place-items-center overflow-y-auto bg-black/35 px-6 py-6 backdrop-blur-sm" role="presentation">
     <section className="relative h-[640px] max-h-[calc(100vh-48px)] w-[480px] overflow-hidden border border-[#dedede] bg-white p-2 text-[#111] shadow-[0_10px_26px_rgba(0,0,0,.2)]" role="dialog" aria-modal="true" aria-labelledby="profile-title" onMouseDown={(event) => event.stopPropagation()}>
@@ -94,13 +95,13 @@ function ReadingProfileModal({ onClose, onGames, streak, completedTasks }: { onC
           <div className="pb-[3px] text-center"><div className="text-[52px] leading-[.8]" aria-hidden="true">🔥</div><div className="mt-[2px] font-tny-caslon text-[27px] leading-none">{streak}</div><div className="mt-[3px] text-[10px] font-semibold tracking-[.14em] text-[#777]">STREAK</div></div>
         </div>
         <div className="mt-[34px] border-y border-[#ededed] py-4"><h3 className="font-tny-irvin text-[20px] font-normal uppercase leading-none">Ways to Earn XP</h3></div>
-        <RewardsList completedTasks={completedTasks} onGames={onGames} onClose={onClose} />
+        <RewardsList completedTasks={completedTasks} onGames={onGames} onArticle={onArticle} onClose={onClose} />
       </div>
     </section>
   </div>
 }
 
-export default function SiteHeader({ headerClassName, logoClassName, dark = false, logoInverted = false, leftContent, onHome, onGames, homeHref = '/', horizontalPaddingClassName = 'px-[42px]' }: SiteHeaderProps) {
+export default function SiteHeader({ headerClassName, logoClassName, dark = false, logoInverted = false, leftContent, onHome, onGames, onArticle, homeHref = '/', horizontalPaddingClassName = 'px-[42px]' }: SiteHeaderProps) {
   const logoAsset = logoInverted ? 'logo-inverted.svg' : 'logo.svg'
   const [profileOpen, setProfileOpen] = useState(false)
   const [completedTasks, setCompletedTasks] = useState(() => new Set(sessionCompletedTasks))
@@ -166,7 +167,7 @@ export default function SiteHeader({ headerClassName, logoClassName, dark = fals
           <button className="h-[30px] w-[30px] border-0 bg-transparent p-[5px] text-inherit" aria-label="Search"><SearchIcon /></button>
         </div>
       </div>
-      {profileOpen && <ReadingProfileModal onClose={() => setProfileOpen(false)} onGames={onGames} streak={streak} completedTasks={revealedCompletedTasks} />}
+      {profileOpen && <ReadingProfileModal onClose={() => setProfileOpen(false)} onGames={onGames} onArticle={onArticle} streak={streak} completedTasks={revealedCompletedTasks} />}
     </header>
   )
 }

@@ -4,11 +4,12 @@ import SiteHeader from './SiteHeader'
 type ArticlePageProps = {
   onHome: () => void
   onGames: () => void
+  onArticle: () => void
 }
 
 const articleParagraphClass = 'mb-7 text-[#242424] font-tny-caslon text-[20px] font-light leading-[1.52] tracking-normal antialiased'
 
-export default function ArticlePage({ onHome, onGames }: ArticlePageProps) {
+export default function ArticlePage({ onHome, onGames, onArticle }: ArticlePageProps) {
   const ledeRef = useRef<HTMLElement>(null)
   const [showLightHeader, setShowLightHeader] = useState(false)
 
@@ -31,7 +32,7 @@ export default function ArticlePage({ onHome, onGames }: ArticlePageProps) {
 
   return (
     <div className="min-h-screen min-w-[1180px] bg-white text-[#111]">
-      <SiteHeader headerClassName={`sticky top-0 z-30 border-b transition-[color,background-color,border-color,box-shadow] duration-150 ${showLightHeader ? 'border-[#dedede] bg-white text-[#111] shadow-[0_2px_4px_rgba(0,0,0,.14)]' : 'border-[#313131] bg-black text-white'}`} logoClassName={`block object-contain transition-[width,height] duration-150 ${showLightHeader ? 'h-[34px] w-[124px]' : 'h-[44px] w-[164px]'}`} dark={!showLightHeader} logoInverted={!showLightHeader} leftContent={<span className="text-[13px] font-semibold">Give the gift of <em className="font-tny-caslon font-normal">The New Yorker.</em></span>} onHome={onHome} onGames={onGames} />
+      <SiteHeader headerClassName={`sticky top-0 z-30 border-b transition-[color,background-color,border-color,box-shadow] duration-150 ${showLightHeader ? 'border-[#dedede] bg-white text-[#111] shadow-[0_2px_4px_rgba(0,0,0,.14)]' : 'border-[#313131] bg-black text-white'}`} logoClassName={`block object-contain transition-[width,height] duration-150 ${showLightHeader ? 'h-[34px] w-[124px]' : 'h-[44px] w-[164px]'}`} dark={!showLightHeader} logoInverted={!showLightHeader} leftContent={<span className="text-[13px] font-semibold">Give the gift of <em className="font-tny-caslon font-normal">The New Yorker.</em></span>} onHome={onHome} onGames={onGames} onArticle={onArticle} />
       <nav className={`flex h-[54px] items-center justify-center gap-[21px] border-b text-[12px] font-semibold tracking-[-.02em] ${showLightHeader ? 'sticky top-[69px] z-[29] border-[#dedede] bg-white text-[#111] shadow-[0_2px_4px_rgba(0,0,0,.1)]' : 'border-[#333] bg-black text-white'}`} aria-label="Primary">
         {['The Latest', 'News', 'Books & Culture', 'Fiction & Poetry', 'Humor & Cartoons', 'Magazine', 'Puzzles & Games', 'Video', 'Podcasts', 'Goings On', 'Shop', 'Festival'].map((item) => item === 'Puzzles & Games' ? <a href="/crossword-puzzles-and-games" onClick={(event) => { event.preventDefault(); onGames() }} key={item}>{item}</a> : <a href={'#' + item.toLowerCase().replaceAll(' ', '-')} key={item}>{item}</a>)}
       </nav>

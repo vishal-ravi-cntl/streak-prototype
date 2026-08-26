@@ -25,11 +25,11 @@ function App() {
   }
 
   const page = path === articlePath
-    ? <ArticlePage onHome={() => navigate('/')} onGames={() => navigate(gamesPath)} />
+    ? <ArticlePage onHome={() => navigate('/')} onGames={() => navigate(gamesPath)} onArticle={() => navigate(articlePath)} />
     : path === gamesPath
-      ? <GamesPage onHome={() => navigate('/')} onGames={() => navigate(gamesPath)} onCatalogues={() => navigate(cataloguesPath)} />
+      ? <GamesPage onHome={() => navigate('/')} onGames={() => navigate(gamesPath)} onCatalogues={() => navigate(cataloguesPath)} onArticle={() => navigate(articlePath)} />
       : path === cataloguesPath
-        ? <CataloguesPage onHome={() => navigate('/')} onGames={() => navigate(gamesPath)} />
+        ? <CataloguesPage onHome={() => navigate('/')} onGames={() => navigate(gamesPath)} onArticle={() => navigate(articlePath)} />
         : <HomePage onArticleClick={() => navigate(articlePath)} onGamesClick={() => navigate(gamesPath)} />
 
   return <>
