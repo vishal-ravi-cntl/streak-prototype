@@ -13,8 +13,8 @@ const popupFireSegment: [number, number] = [0, 25]
 const readingTitleMilestones = [
   { xp: 1, title: 'New Yorker', character: 'https://media.newyorker.com/photos/6a038e1598355286cc52147c/4:3/w_768%2Cc_limit/Catalogues%252016-9-optimised.gif' },
   { xp: 300, title: 'Borough Regular', character: 'https://media.newyorker.com/photos/68dac5621bc6d6e78a9bce84/4:3/w_768%2Cc_limit/Shuffalo%252016.9.gif' },
-  { xp: 500, title: 'TNY Insider', character: 'https://media.newyorker.com/photos/625f1f35553e9092ad75f41e/4:3/w_768%2Cc_limit/NewYorkerCrossword-Homepage.gif' },
-  { xp: 1000, title: 'TNY Legend', character: 'https://media.newyorker.com/photos/65d4fc979889ece07e0e4659/4:3/w_768%2Cc_limit/mini_anim.gif' },
+  { xp: 500, title: 'Insider', character: 'https://media.newyorker.com/photos/625f1f35553e9092ad75f41e/4:3/w_768%2Cc_limit/NewYorkerCrossword-Homepage.gif' },
+  { xp: 1000, title: 'Legend', character: 'https://media.newyorker.com/photos/65d4fc979889ece07e0e4659/4:3/w_768%2Cc_limit/mini_anim.gif' },
 ]
 
 type SiteHeaderProps = {
