@@ -10,6 +10,13 @@ setWasmUrl('/dotlottie-player.wasm')
 
 const popupFireSegment: [number, number] = [0, 25]
 
+const readingTitleMilestones = [
+  { xp: 1, title: 'New Yorker', character: 'https://media.newyorker.com/photos/6a038e1598355286cc52147c/4:3/w_768%2Cc_limit/Catalogues%252016-9-optimised.gif' },
+  { xp: 300, title: 'Borough Regular', character: 'https://media.newyorker.com/photos/68dac5621bc6d6e78a9bce84/4:3/w_768%2Cc_limit/Shuffalo%252016.9.gif' },
+  { xp: 500, title: 'TNY Insider', character: 'https://media.newyorker.com/photos/625f1f35553e9092ad75f41e/4:3/w_768%2Cc_limit/NewYorkerCrossword-Homepage.gif' },
+  { xp: 1000, title: 'TNY Legend', character: 'https://media.newyorker.com/photos/65d4fc979889ece07e0e4659/4:3/w_768%2Cc_limit/mini_anim.gif' },
+]
+
 type SiteHeaderProps = {
   headerClassName: string
   logoClassName: string
@@ -346,13 +353,61 @@ function PopupStreakFireIntro({ isOpen, popupContentRef, targetRef, reducedMotio
   </div>
 }
 
+function getReadingTitle(totalXp: number) {
+  return readingTitleMilestones.reduce((title, milestone) => totalXp >= milestone.xp ? milestone.title : title, readingTitleMilestones[0].title)
+}
+
+function ShareTitleIcon({ type }: { type: 'x' | 'instagram' | 'facebook' | 'link' }) {
+  if (type === 'x') return <span className="text-[16px] font-semibold leading-none" aria-hidden="true">𝕏</span>
+  if (type === 'facebook') return <span className="font-serif text-[20px] font-bold leading-none" aria-hidden="true">f</span>
+  if (type === 'link') return <svg className="h-4 w-4 fill-none stroke-current stroke-[1.8]" viewBox="0 0 24 24" aria-hidden="true"><path d="m9.5 14.5 5-5M7.2 17.8l-1.5 1.5a3.5 3.5 0 0 1-5-5l3-3a3.5 3.5 0 0 1 5 0M16.8 6.2l1.5-1.5a3.5 3.5 0 1 1 5 5l-3 3a3.5 3.5 0 0 1-5 0" /></svg>
+  return <svg className="h-[17px] w-[17px] fill-none stroke-current stroke-[1.7]" viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="3.5" width="17" height="17" rx="5" /><circle cx="12" cy="12" r="4" /><circle cx="17.7" cy="6.4" r=".8" className="fill-current stroke-none" /></svg>
+}
+
+function TitleRoadmapModal({ onClose, totalXp }: { onClose: () => void, totalXp: number }) {
+  const currentTitle = getReadingTitle(totalXp)
+  const nextTitle = readingTitleMilestones.find((milestone) => milestone.xp > totalXp)
+
+  return <div className="title-roadmap-overlay" role="presentation" onMouseDown={onClose}>
+    <section className="title-roadmap-modal" role="dialog" aria-modal="true" aria-labelledby="title-roadmap-heading" onMouseDown={(event) => event.stopPropagation()}>
+      <button className="absolute right-4 top-4 border-0 bg-transparent p-1 text-[25px] font-light leading-none text-[#222] hover:opacity-60" aria-label="Close title roadmap" onClick={onClose}>×</button>
+      <div className="border border-[#ededed] px-9 pb-6 pt-7">
+        <p className="text-center text-[9px] font-extrabold uppercase tracking-[.16em] text-[#d93636]">Your title</p>
+        <h2 className="mt-2 text-center font-tny-irvin text-[47px] font-normal uppercase leading-[.9]" id="title-roadmap-heading">{currentTitle}</h2>
+        <p className="mt-2 text-center font-tny-caslon text-[18px] text-[#555]">{totalXp} XP earned</p>
+        <div className="mt-5 border-t border-[#ededed] pt-4">
+          <div className="mb-3 flex items-baseline justify-between"><h3 className="font-tny-irvin text-[20px] font-normal uppercase leading-none">Your Roadmap</h3>{nextTitle && <span className="text-[9px] font-bold uppercase tracking-[.12em] text-[#777]">Next: {nextTitle.xp} XP</span>}</div>
+          <div className="title-roadmap-list">
+            {readingTitleMilestones.map((milestone, index) => {
+              const isCurrent = milestone.title === currentTitle
+              const isEarned = milestone.xp <= totalXp
+              const isNext = milestone.title === nextTitle?.title
+              const status = isCurrent ? 'Current title' : isNext ? 'Next title' : isEarned ? 'Earned' : 'Locked'
+              return <div className={`title-roadmap-milestone ${isCurrent ? 'is-current' : isEarned ? 'is-earned' : ''}`} key={milestone.title} style={{ '--roadmap-delay': `${160 + index * 120}ms` } as CSSProperties}>
+                <div className="title-roadmap-character"><img src={milestone.character} alt="" /></div>
+                <span className="title-roadmap-dot" aria-hidden="true" />
+                <p className="mt-2 font-tny-caslon text-[20px] leading-none">{milestone.title}</p>
+                <p className="mt-1 text-[10px] font-bold uppercase tracking-[.1em] text-[#777]">{milestone.xp} XP</p>
+                <span className={`mt-1 text-[9px] font-bold uppercase tracking-[.12em] ${isCurrent ? 'text-[#d93636]' : isEarned ? 'text-[#147cc0]' : 'text-[#999]'}`}>{status}</span>
+              </div>
+            })}
+          </div>
+        </div>
+        <footer className="mt-5 border-t border-[#ededed] pt-4 text-center"><p className="text-[10px] font-bold uppercase tracking-[.14em] text-[#777]">Share your title</p><div className="mt-2 flex justify-center gap-2"><button className="title-share-button" aria-label="Share title on X"><ShareTitleIcon type="x" /></button><button className="title-share-button" aria-label="Share title on Instagram"><ShareTitleIcon type="instagram" /></button><button className="title-share-button" aria-label="Share title on Facebook"><ShareTitleIcon type="facebook" /></button><button className="title-share-button" aria-label="Copy a link to share title"><ShareTitleIcon type="link" /></button></div></footer>
+      </div>
+    </section>
+  </div>
+}
+
 function ReadingProfileModal({ onClose, onGames, onArticle, streak, completedTasks }: { onClose: () => void, onGames?: () => void, onArticle?: () => void, streak: number, completedTasks: Set<CompletionTaskId> }) {
-  const totalXp = 553 + [...completedTasks].reduce((total, taskId) => total + completionTaskDetails[taskId].xpAmount, 0)
+  const totalXp = 543 + [...completedTasks].reduce((total, taskId) => total + completionTaskDetails[taskId].xpAmount, 0)
+  const readingTitle = getReadingTitle(totalXp)
   const reducedMotion = useReducedMotion()
   const popupContentRef = useRef<HTMLDivElement>(null)
   const flameTargetRef = useRef<HTMLDivElement>(null)
   const [showFlameFallback, setShowFlameFallback] = useState(reducedMotion)
   const [isFlameIntroActive, setIsFlameIntroActive] = useState(false)
+  const [isTitleRoadmapOpen, setIsTitleRoadmapOpen] = useState(false)
   const showStaticFlameFallback = useCallback(() => setShowFlameFallback(true), [])
   return <div className="fixed inset-0 z-[100] grid place-items-center overflow-y-auto bg-black/35 px-6 py-6 backdrop-blur-sm" role="presentation">
     <section className="relative h-[640px] max-h-[calc(100vh-48px)] w-[480px] overflow-hidden border border-[#dedede] bg-white p-2 text-[#111] shadow-[0_10px_26px_rgba(0,0,0,.2)]" role="dialog" aria-modal="true" aria-labelledby="profile-title" onMouseDown={(event) => event.stopPropagation()}>
@@ -363,13 +418,14 @@ function ReadingProfileModal({ onClose, onGames, onArticle, streak, completedTas
         <img className="mx-auto block h-[42px] w-[168px] object-contain" src="https://www.newyorker.com/verso/static/thenewyorker-us/assets/logo.svg" alt="The New Yorker" />
         <p className="mb-1 mt-[22px] text-[9px] font-extrabold uppercase tracking-[.15em] text-[#d93636]">Your Reading Profile</p>
         <div className="grid grid-cols-[1fr_100px] items-end">
-          <div><h2 className="font-tny-irvin text-[40px] font-normal uppercase leading-[.9]" id="profile-title">City Sage</h2><div className="mt-1 flex items-end gap-2"><span className="font-tny-caslon text-[58px] leading-[.8] text-[#147cc0]">{totalXp}</span><span className="mb-[5px] text-[10px] font-bold tracking-[.12em] text-[#777]">XP</span></div></div>
+          <div><button className="group inline-flex items-end gap-2 border-0 bg-transparent p-0 text-left" aria-haspopup="dialog" aria-label={`View ${readingTitle} title roadmap`} onClick={() => setIsTitleRoadmapOpen(true)}><h2 className="font-tny-irvin text-[40px] font-normal uppercase leading-[.9] group-hover:text-[#d93636]" id="profile-title">{readingTitle}</h2><span className="mb-[2px] flex h-[12px] items-center text-[#d93636] transition-transform group-hover:translate-x-[2px] group-hover:-translate-y-[2px]"><ExternalLinkIcon /></span></button><div className="mt-1 flex items-end gap-2"><span className="font-tny-caslon text-[58px] leading-[.8] text-[#147cc0]">{totalXp}</span><span className="mb-[5px] text-[10px] font-bold tracking-[.12em] text-[#777]">XP</span></div></div>
           <div className="pb-[3px] text-center"><div className="popup-streak-flame-target" ref={flameTargetRef} aria-hidden="true">{showFlameFallback && <StaticFlame className="popup-streak-static-flame" />}</div><div className="mt-[2px] font-tny-caslon text-[27px] leading-none">{streak}</div><div className="mt-[3px] text-[10px] font-semibold tracking-[.14em] text-[#777]">STREAK</div></div>
         </div>
         <div className="mt-[34px] border-y border-[#ededed] py-4"><h3 className="font-tny-irvin text-[20px] font-normal uppercase leading-none">Ways to Earn XP</h3></div>
         <RewardsList completedTasks={completedTasks} onGames={onGames} onArticle={onArticle} onClose={onClose} />
         </div>
       </div>
+      {isTitleRoadmapOpen && <TitleRoadmapModal totalXp={totalXp} onClose={() => setIsTitleRoadmapOpen(false)} />}
     </section>
   </div>
 }

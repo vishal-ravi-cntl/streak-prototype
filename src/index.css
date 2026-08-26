@@ -261,6 +261,152 @@ a { color: inherit; text-decoration: none; }
   animation: popup-streak-flame-settle-glow 1800ms ease-in-out infinite;
 }
 
+.title-roadmap-overlay {
+  position: fixed;
+  z-index: 120;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background: rgba(0, 0, 0, .45);
+  backdrop-filter: blur(5px);
+  animation: title-roadmap-overlay-enter 220ms ease-out both;
+}
+
+.title-roadmap-modal {
+  position: relative;
+  width: 920px;
+  max-width: 100%;
+  background: #fff;
+  box-shadow: 0 18px 48px rgba(0, 0, 0, .28);
+  animation: title-roadmap-modal-enter 480ms cubic-bezier(.22, 1, .36, 1) both;
+}
+
+.title-roadmap-list {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.title-roadmap-list::before {
+  position: absolute;
+  top: 80px;
+  right: 12.5%;
+  left: 12.5%;
+  height: 1px;
+  background: #dedede;
+  content: '';
+  transform: scaleX(0);
+  transform-origin: left;
+  animation: title-roadmap-line-enter 780ms 100ms cubic-bezier(.22, 1, .36, 1) both;
+}
+
+.title-roadmap-milestone {
+  position: relative;
+  display: flex;
+  min-height: 170px;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  opacity: 0;
+  transform: translateY(12px);
+  animation: title-roadmap-milestone-enter 440ms var(--roadmap-delay) cubic-bezier(.22, 1, .36, 1) both;
+}
+
+.title-roadmap-character {
+  position: relative;
+  z-index: 1;
+  width: 74px;
+  height: 74px;
+  overflow: hidden;
+  border: 1px solid #dedede;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 2px 7px rgba(0, 0, 0, .08);
+}
+
+.title-roadmap-character img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.title-roadmap-dot {
+  position: relative;
+  z-index: 1;
+  display: block;
+  width: 11px;
+  height: 11px;
+  margin-top: 1px;
+  flex: 0 0 auto;
+  border: 1px solid #aaa;
+  border-radius: 50%;
+  background: #fff;
+}
+
+.title-roadmap-milestone.is-earned .title-roadmap-dot {
+  border-color: #147cc0;
+  background: #147cc0;
+}
+
+.title-roadmap-milestone.is-current .title-roadmap-dot {
+  border-color: #d93636;
+  background: #d93636;
+  box-shadow: 0 0 0 5px #f8dddd;
+  animation: title-roadmap-current-pulse 1800ms 780ms ease-in-out infinite;
+}
+
+.title-share-button {
+  display: grid;
+  width: 34px;
+  height: 34px;
+  place-items: center;
+  border: 1px solid #c8c8c8;
+  border-radius: 50%;
+  background: #fff;
+  color: #111;
+  transition: color 150ms ease, background 150ms ease, border-color 150ms ease, transform 150ms ease;
+}
+
+.title-share-button:hover {
+  border-color: #d93636;
+  background: #d93636;
+  color: #fff;
+  transform: translateY(-2px);
+}
+
+.title-share-button:focus-visible {
+  outline: 2px solid #147cc0;
+  outline-offset: 3px;
+}
+
+@keyframes title-roadmap-overlay-enter {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes title-roadmap-modal-enter {
+  from { opacity: 0; transform: translateY(22px) scale(.97); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes title-roadmap-line-enter {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
+
+@keyframes title-roadmap-milestone-enter {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes title-roadmap-current-pulse {
+  0%, 100% { box-shadow: 0 0 0 5px rgba(217, 54, 54, .16); }
+  50% { box-shadow: 0 0 0 8px rgba(217, 54, 54, .04); }
+}
+
 @keyframes popup-streak-flame-travel {
   0% { opacity: 0; transform: translate(-50%, -50%) scale(.1); }
   8% { opacity: 1; }
@@ -311,7 +457,12 @@ a { color: inherit; text-decoration: none; }
   .streak-button.is-celebrating .streak-spark,
   .popup-streak-intro-flare.is-playing,
   .popup-streak-intro-flame.is-playing,
-  .popup-streak-intro-flame.is-complete dotlottie-wc {
+  .popup-streak-intro-flame.is-complete dotlottie-wc,
+  .title-roadmap-overlay,
+  .title-roadmap-modal,
+  .title-roadmap-list::before,
+  .title-roadmap-milestone,
+  .title-roadmap-milestone.is-current .title-roadmap-dot {
     animation: none;
     transition: none;
   }
