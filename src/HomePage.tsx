@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+import SiteHeader from './SiteHeader'
 
 type Story = {
   title: string
@@ -35,10 +36,6 @@ const stories: Story[] = [
   },
 ]
 
-function SearchIcon() {
-  return <svg className="h-[19px] w-[19px] fill-none stroke-current stroke-[1.6]" viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.7" cy="10.7" r="5.8" /><path d="m15.2 15.2 4.5 4.5" /></svg>
-}
-
 function HeadphonesIcon() {
   return <svg className="h-[25px] w-[25px] fill-none stroke-current stroke-[1]" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 13v-1a8 8 0 0 1 16 0v1M4 13v4.1a1.9 1.9 0 0 0 1.9 1.9H7v-6H5.9A1.9 1.9 0 0 0 4 14.9Zm16 0v4.1a1.9 1.9 0 0 1-1.9 1.9H17v-6h1.1a1.9 1.9 0 0 1 1.9 1.9Z" /></svg>
 }
@@ -61,17 +58,7 @@ export default function HomePage({ onArticleClick, onGamesClick }: HomePageProps
 
   return (
     <div className="min-w-[1180px] bg-white text-[#111] font-dm">
-      <header className={`sticky top-0 z-20 border-b transition-[color,background-color,border-color] duration-150 ${navigationJoined ? 'border-[#ddd] bg-white text-[#111]' : 'border-[#313131] bg-black text-white'}`}>
-        <div className="grid h-[69px] grid-cols-[1fr_auto_1fr] items-center px-[42px]">
-          <div className="min-w-px" />
-          <a className="col-start-2 block" href="#top"><img className={`block object-contain transition-[width,height] duration-150 ${navigationJoined ? 'h-[38px] w-[136px]' : 'h-[50px] w-[184px]'}`} src={`https://www.newyorker.com/verso/static/thenewyorker-us/assets/${navigationJoined ? 'logo.svg' : 'logo-inverted.svg'}`} alt="The New Yorker" /></a>
-          <div className="col-start-3 flex items-center justify-self-end gap-[22px] text-[12px] tracking-[-.01em]">
-            <button className="border-0 bg-transparent p-0 text-inherit hover:opacity-70">Newsletter</button><button className="inline-flex items-center gap-[7px] border-0 bg-transparent p-0 text-inherit hover:opacity-70">My Account<svg className="h-[6px] w-[9px] fill-current" viewBox="0 0 9 6" aria-hidden="true"><path d="M0 0h9L4.5 6z" /></svg></button>
-            <a className="w-[123px] bg-[#147cc0] px-3 py-2.5 text-center !text-white" href="#gift">Give a gift</a>
-            <button className="h-[30px] w-[30px] border-0 bg-transparent p-[5px] text-inherit" aria-label="Search"><SearchIcon /></button>
-          </div>
-        </div>
-      </header>
+      <SiteHeader headerClassName={`sticky top-0 z-20 border-b transition-[color,background-color,border-color] duration-150 ${navigationJoined ? 'border-[#ddd] bg-white text-[#111]' : 'border-[#313131] bg-black text-white'}`} homeHref="#top" logoClassName={`block object-contain transition-[width,height] duration-150 ${navigationJoined ? 'h-[38px] w-[136px]' : 'h-[50px] w-[184px]'}`} dark={!navigationJoined} logoInverted={!navigationJoined} />
 
       <main>
         <section className="grid min-h-[812px] grid-cols-[1.025fr_1fr] items-center bg-black px-[26px] pb-[109px] pt-[94px] text-white" id="latest">

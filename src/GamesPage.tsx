@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+import SiteHeader from './SiteHeader'
 
 type GamesPageProps = {
   onHome: () => void
@@ -22,10 +23,6 @@ type PuzzleSectionProps = {
   image: string
   entries: GameEntry[]
   onHeroClick?: () => void
-}
-
-function SearchIcon() {
-  return <svg className="h-[19px] w-[19px] fill-none stroke-current stroke-[1.6]" viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.7" cy="10.7" r="5.8" /><path d="m15.2 15.2 4.5 4.5" /></svg>
 }
 
 function PuzzleSection({ title, allLabel, heroTitle, description, action, image, entries, onHeroClick }: PuzzleSectionProps) {
@@ -101,13 +98,7 @@ export default function GamesPage({ onHome, onGames, onCatalogues }: GamesPagePr
 
   return (
     <div className="min-h-screen min-w-[1180px] bg-white text-[#111] font-dm">
-      <header className="sticky top-0 z-30 border-b border-[#dedede] bg-white shadow-[0_2px_4px_rgba(0,0,0,.1)]">
-        <div className="grid h-[69px] grid-cols-[1fr_auto_1fr] items-center px-[42px]">
-          <div />
-          <a className="col-start-2 block" href="/" onClick={(event) => { event.preventDefault(); onHome() }}><img className="block h-[44px] w-[164px] object-contain" src="https://www.newyorker.com/verso/static/thenewyorker-us/assets/logo.svg" alt="The New Yorker" /></a>
-          <div className="col-start-3 flex items-center justify-self-end gap-[22px] text-[12px] tracking-[-.01em]"><button className="border-0 bg-transparent p-0">Newsletter</button><button className="inline-flex items-center gap-[7px] border-0 bg-transparent p-0">My Account<svg className="h-[6px] w-[9px] fill-current" viewBox="0 0 9 6" aria-hidden="true"><path d="M0 0h9L4.5 6z" /></svg></button><a className="w-[123px] bg-[#147cc0] px-3 py-2.5 text-center !text-white" href="#gift">Give a gift</a><button className="h-[30px] w-[30px] border-0 bg-transparent p-[5px]" aria-label="Search"><SearchIcon /></button></div>
-        </div>
-      </header>
+      <SiteHeader headerClassName="sticky top-0 z-30 border-b border-[#dedede] bg-white shadow-[0_2px_4px_rgba(0,0,0,.1)]" logoClassName="block h-[44px] w-[164px] object-contain" onHome={onHome} />
       {showNavigation && <nav className="fixed left-0 right-0 top-[69px] z-[29] flex h-[53px] items-center justify-center gap-[21px] border-b border-[#dedede] bg-white text-[12px] font-semibold tracking-[-.02em] shadow-[0_2px_4px_rgba(0,0,0,.07)]" aria-label="Primary">{navigationItems.map((item) => item === 'Puzzles & Games' ? <a className="h-[53px] border-b-2 border-[#111] pt-[18px]" href="/crossword-puzzles-and-games" onClick={(event) => { event.preventDefault(); onGames() }} key={item}>{item}</a> : <a href={'#' + item.toLowerCase().replaceAll(' ', '-')} key={item}>{item}</a>)}</nav>}
 
       <main className="pb-24">

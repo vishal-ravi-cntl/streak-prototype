@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+import SiteHeader from './SiteHeader'
 
 type ArticlePageProps = {
   onHome: () => void
@@ -6,10 +7,6 @@ type ArticlePageProps = {
 }
 
 const articleParagraphClass = 'mb-7 text-[#242424] font-tny-caslon text-[20px] font-light leading-[1.52] tracking-normal antialiased'
-
-function SearchIcon() {
-  return <svg className="h-[19px] w-[19px] fill-none stroke-current stroke-[1.6]" viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.7" cy="10.7" r="5.8" /><path d="m15.2 15.2 4.5 4.5" /></svg>
-}
 
 export default function ArticlePage({ onHome, onGames }: ArticlePageProps) {
   const ledeRef = useRef<HTMLElement>(null)
@@ -27,17 +24,7 @@ export default function ArticlePage({ onHome, onGames }: ArticlePageProps) {
 
   return (
     <div className="min-h-screen min-w-[1180px] bg-white text-[#111]">
-      <header className={`sticky top-0 z-30 border-b transition-[color,background-color,border-color,box-shadow] duration-150 ${showLightHeader ? 'border-[#dedede] bg-white text-[#111] shadow-[0_2px_4px_rgba(0,0,0,.14)]' : 'border-[#313131] bg-black text-white'}`}>
-        <div className="grid h-[69px] grid-cols-[1fr_auto_1fr] items-center px-[42px]">
-          <div className="text-[13px] font-semibold">Give the gift of <em className="font-tny-caslon font-normal">The New Yorker.</em></div>
-          <a className="col-start-2 block" href="/" onClick={(event) => { event.preventDefault(); onHome() }}><img className={`block object-contain transition-[width,height] duration-150 ${showLightHeader ? 'h-[34px] w-[124px]' : 'h-[44px] w-[164px]'}`} src={`https://www.newyorker.com/verso/static/thenewyorker-us/assets/${showLightHeader ? 'logo.svg' : 'logo-inverted.svg'}`} alt="The New Yorker" /></a>
-          <div className="col-start-3 flex items-center justify-self-end gap-[22px] text-[12px] tracking-[-.01em]">
-            <button className="border-0 bg-transparent p-0 text-inherit">Newsletter</button><button className="inline-flex items-center gap-[7px] border-0 bg-transparent p-0 text-inherit">My Account<svg className="h-[6px] w-[9px] fill-current" viewBox="0 0 9 6" aria-hidden="true"><path d="M0 0h9L4.5 6z" /></svg></button>
-            <a className="w-[123px] bg-[#147cc0] px-3 py-2.5 text-center !text-white" href="#gift">Give a gift</a>
-            <button className="h-[30px] w-[30px] border-0 bg-transparent p-[5px] text-inherit" aria-label="Search"><SearchIcon /></button>
-          </div>
-        </div>
-      </header>
+      <SiteHeader headerClassName={`sticky top-0 z-30 border-b transition-[color,background-color,border-color,box-shadow] duration-150 ${showLightHeader ? 'border-[#dedede] bg-white text-[#111] shadow-[0_2px_4px_rgba(0,0,0,.14)]' : 'border-[#313131] bg-black text-white'}`} logoClassName={`block object-contain transition-[width,height] duration-150 ${showLightHeader ? 'h-[34px] w-[124px]' : 'h-[44px] w-[164px]'}`} dark={!showLightHeader} logoInverted={!showLightHeader} leftContent={<span className="text-[13px] font-semibold">Give the gift of <em className="font-tny-caslon font-normal">The New Yorker.</em></span>} onHome={onHome} />
       <nav className={`flex h-[54px] items-center justify-center gap-[21px] border-b text-[12px] font-semibold tracking-[-.02em] ${showLightHeader ? 'sticky top-[69px] z-[29] border-[#dedede] bg-white text-[#111] shadow-[0_2px_4px_rgba(0,0,0,.1)]' : 'border-[#333] bg-black text-white'}`} aria-label="Primary">
         {['The Latest', 'News', 'Books & Culture', 'Fiction & Poetry', 'Humor & Cartoons', 'Magazine', 'Puzzles & Games', 'Video', 'Podcasts', 'Goings On', 'Shop', 'Festival'].map((item) => item === 'Puzzles & Games' ? <a href="/crossword-puzzles-and-games" onClick={(event) => { event.preventDefault(); onGames() }} key={item}>{item}</a> : <a href={'#' + item.toLowerCase().replaceAll(' ', '-')} key={item}>{item}</a>)}
       </nav>
