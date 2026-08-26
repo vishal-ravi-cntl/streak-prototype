@@ -66,8 +66,8 @@ export default function HomePage({ onArticleClick, onGamesClick }: HomePageProps
           <div className="min-w-px" />
           <a className="col-start-2 block" href="#top"><img className={`block object-contain transition-[width,height] duration-150 ${navigationJoined ? 'h-[38px] w-[136px]' : 'h-[50px] w-[184px]'}`} src={`https://www.newyorker.com/verso/static/thenewyorker-us/assets/${navigationJoined ? 'logo.svg' : 'logo-inverted.svg'}`} alt="The New Yorker" /></a>
           <div className="col-start-3 flex items-center justify-self-end gap-[22px] text-[12px] tracking-[-.01em]">
-            <button className="border-0 bg-transparent p-0 text-inherit hover:opacity-70">Newsletter</button><button className="border-0 bg-transparent p-0 text-inherit hover:opacity-70">My Account⌄</button>
-            <a className="w-[123px] bg-[#147cc0] px-3 py-2.5 text-center text-white" href="#gift">Give a gift</a>
+            <button className="border-0 bg-transparent p-0 text-inherit hover:opacity-70">Newsletter</button><button className="inline-flex items-center gap-[7px] border-0 bg-transparent p-0 text-inherit hover:opacity-70">My Account<svg className="h-[6px] w-[9px] fill-current" viewBox="0 0 9 6" aria-hidden="true"><path d="M0 0h9L4.5 6z" /></svg></button>
+            <a className="w-[123px] bg-[#147cc0] px-3 py-2.5 text-center !text-white" href="#gift">Give a gift</a>
             <button className="h-[30px] w-[30px] border-0 bg-transparent p-[5px] text-inherit" aria-label="Search"><SearchIcon /></button>
           </div>
         </div>
