@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from 'react'
 type GamesPageProps = {
   onHome: () => void
   onGames: () => void
+  onCatalogues: () => void
 }
 
 const navigationItems = ['The Latest', 'News', 'Books & Culture', 'Fiction & Poetry', 'Humor & Cartoons', 'Magazine', 'Puzzles & Games', 'Video', 'Podcasts', 'Goings On', 'Shop', 'Festival']
@@ -20,13 +21,14 @@ type PuzzleSectionProps = {
   action: string
   image: string
   entries: GameEntry[]
+  onHeroClick?: () => void
 }
 
 function SearchIcon() {
   return <svg className="h-[19px] w-[19px] fill-none stroke-current stroke-[1.6]" viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.7" cy="10.7" r="5.8" /><path d="m15.2 15.2 4.5 4.5" /></svg>
 }
 
-function PuzzleSection({ title, allLabel, heroTitle, description, action, image, entries }: PuzzleSectionProps) {
+function PuzzleSection({ title, allLabel, heroTitle, description, action, image, entries, onHeroClick }: PuzzleSectionProps) {
   return (
     <section className="mx-[72px] mb-[72px] border-t border-[#dedede]">
       <div className="flex h-[101px] items-center justify-between border-b border-[#dedede]">
@@ -35,7 +37,7 @@ function PuzzleSection({ title, allLabel, heroTitle, description, action, image,
       </div>
       <div className="grid grid-cols-2 pt-[34px]">
         <article className="border-r border-[#dedede] pr-[18px] text-center">
-          <img className="mx-auto aspect-square w-[84%] object-cover" src={image} alt={heroTitle} />
+          {onHeroClick ? <button className="mx-auto block w-[84%] border-0 bg-transparent p-0" onClick={onHeroClick} aria-label={`Open ${heroTitle}`}><img className="aspect-square w-full object-cover" src={image} alt={heroTitle} /></button> : <img className="mx-auto aspect-square w-[84%] object-cover" src={image} alt={heroTitle} />}
           <h3 className="mt-5 font-libre-caslon text-[28px] font-normal leading-none">{heroTitle}</h3>
           <p className="mx-auto mt-3 max-w-[360px] text-[14px] leading-[1.35]">{description}</p>
           <a className="mb-1 mt-3 inline-block text-[13px] font-semibold underline underline-offset-4" href={'#' + title.toLowerCase().replaceAll(' ', '-')}>{action} »</a>
@@ -86,7 +88,7 @@ const gameSections: PuzzleSectionProps[] = [
   },
 ]
 
-export default function GamesPage({ onHome, onGames }: GamesPageProps) {
+export default function GamesPage({ onHome, onGames, onCatalogues }: GamesPageProps) {
   const titleRef = useRef<HTMLElement>(null)
   const [showNavigation, setShowNavigation] = useState(false)
 
@@ -111,7 +113,7 @@ export default function GamesPage({ onHome, onGames }: GamesPageProps) {
       <main className="pb-24">
         <header className="h-[220px] px-[72px] pt-[19px] text-center" ref={titleRef}><h1 className="font-tny-irvin text-[42px] font-light leading-none uppercase">Puzzles &amp; Games</h1></header>
         <section className="mx-[72px] flex h-[72px] items-center justify-center gap-3 border-b border-[#dedede] px-[18px] text-[13px]"><img className="h-[38px] w-[52px] object-cover" src="https://media.newyorker.com/photos/5d405edf21a62700083b195d/master/w_150%2Cc_limit/newsletter-hp-banner.jpg" alt="" /><span>Stay up to date on our latest offerings.</span><a className="font-semibold text-[#087dc1] underline underline-offset-2" href="#newsletter">Sign up for the Puzzles &amp; Games newsletter »</a></section>
-        <div>{gameSections.map((section) => <PuzzleSection {...section} key={section.title} />)}</div>
+        <div>{gameSections.map((section) => <PuzzleSection {...section} onHeroClick={section.title === 'Catalogues' ? onCatalogues : undefined} key={section.title} />)}</div>
       </main>
     </div>
   )
